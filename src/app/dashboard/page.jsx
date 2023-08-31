@@ -7,7 +7,7 @@ const Quiz = () => {
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(30 * 60); // Time in seconds (10 minutes)
+  const [timeLeft, setTimeLeft] = useState(30 * 60); // Time in seconds (30 minutes)
   const [timerActive, setTimerActive] = useState(true);
 
   useEffect(() => {
@@ -66,7 +66,7 @@ const Quiz = () => {
 
   return (
     <>
-      <div className="text-right pt-6 mr-5">
+      <div className="text-right mr-5">
         <span className="font-bold">Time Left:</span>{" "}
         <span className="text-red-600 text-xl font-bold">
           {" "}
