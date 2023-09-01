@@ -9,7 +9,10 @@ const Quiz = () => {
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(30 * 60); // Time in seconds (30 minutes)
   const [timerActive, setTimerActive] = useState(true);
+  const [visitedQuestions, setVisitedQuestions] = useState([]);
+  const [attemptedQuestions, setAttemptedQuestions] = useState([]);
 
+  // effect for fetching api
   useEffect(() => {
     // Fetch quiz questions from the API
     fetch("https://opentdb.com/api.php?amount=15")
@@ -31,23 +34,8 @@ const Quiz = () => {
       .catch((error) => console.error("Error fetching quiz questions:", error));
   }, []);
 
-  const handleOptionSelect = (event) => {
-    const updatedAnswers = [...selectedAnswers];
-    updatedAnswers[currentQuestion] = event.target.value;
-    setSelectedAnswers(updatedAnswers);
-  };
-
-  const handleSubmitQuiz = () => {
-    setQuizSubmitted(true);
-  };
-
-  const handleRestartQuiz = () => {
-    setSelectedAnswers([]);
-    setCurrentQuestion(0);
-    setQuizSubmitted(false);
-  };
-
-  useEffect(() => {
+  // effect for time left
+    useEffect(() => {
     if (timerActive && timeLeft > 0) {
       const timer = setTimeout(() => {
         setTimeLeft(timeLeft - 1);
@@ -59,6 +47,33 @@ const Quiz = () => {
       setTimerActive(false);
     }
   }, [timeLeft, timerActive]);
+
+// effect for question visited
+    useEffect(() => {
+    if (visitedQuestions.indexOf(currentQuestion) === -1) {
+      setVisitedQuestions([...visitedQuestions, currentQuestion]);
+    }
+  }, [currentQuestion, visitedQuestions]);
+
+  const handleOptionSelect = (event) => {
+    const updatedAnswers = [...selectedAnswers];
+    updatedAnswers[currentQuestion] = event.target.value;
+    setSelectedAnswers(updatedAnswers);
+
+    if (attemptedQuestions.indexOf(currentQuestion) === -1) {
+      setAttemptedQuestions([...attemptedQuestions, currentQuestion]);
+    }
+  };
+
+  const handleSubmitQuiz = () => {
+    setQuizSubmitted(true);
+  };
+
+  const handleRestartQuiz = () => {
+    setSelectedAnswers([]);
+    setCurrentQuestion(0);
+    setQuizSubmitted(false);
+  };
 
   const handleAutoSubmit = () => {
     setQuizSubmitted(true);
@@ -72,6 +87,7 @@ const Quiz = () => {
           {" "}
           {Math.floor(timeLeft / 60)}:{timeLeft % 60}
         </span>
+        <div><span className="border bg-yellow-300 w-20 h-4 rounded-lg p-2 mr-3"></span><span> -Question Attempted</span></div>
       </div>
 
       <div className="grid h-screen place-items-center">
@@ -108,9 +124,13 @@ const Quiz = () => {
                 {questions.map((_, index) => (
                   <button
                     key={index}
-                    className={`py-1 px-2 rounded text-center ${
+                    className={`py-1 px-2 rounded ${
                       currentQuestion === index
                         ? "bg-blue-950 text-white"
+                        : visitedQuestions.includes(index)
+                        ? attemptedQuestions.includes(index)
+                          ? "bg-yellow-500 text-white"
+                          : "bg-gray-300 text-gray-700"
                         : "bg-gray-300 text-gray-700"
                     }`}
                     onClick={() => setCurrentQuestion(index)}
