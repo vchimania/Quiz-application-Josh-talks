@@ -35,7 +35,7 @@ const Quiz = () => {
   }, []);
 
   // effect for time left
-    useEffect(() => {
+  useEffect(() => {
     if (timerActive && timeLeft > 0) {
       const timer = setTimeout(() => {
         setTimeLeft(timeLeft - 1);
@@ -48,8 +48,8 @@ const Quiz = () => {
     }
   }, [timeLeft, timerActive]);
 
-// effect for question visited
-    useEffect(() => {
+  // effect for question visited
+  useEffect(() => {
     if (visitedQuestions.indexOf(currentQuestion) === -1) {
       setVisitedQuestions([...visitedQuestions, currentQuestion]);
     }
@@ -87,7 +87,14 @@ const Quiz = () => {
           {" "}
           {Math.floor(timeLeft / 60)}:{timeLeft % 60}
         </span>
-        <div><span className="border bg-yellow-300 w-20 h-4 rounded-lg p-2 mr-3"></span><span> -Question Attempted</span></div>
+        <div className="flex items-center mt-2">
+          <span className="border bg-yellow-300 w-4 h-4 rounded-lg mr-2"></span>
+          <span className="text-sm font-semibold">Attempted</span>
+        </div>
+        <div className="flex items-center mt-2">
+          <span className="border bg-blue-950 w-4 h-4 rounded-lg mr-2"></span>
+          <span className="text-sm font-semibold">Current Question</span>
+        </div>
       </div>
 
       <div className="grid h-screen place-items-center">
@@ -116,7 +123,7 @@ const Quiz = () => {
                 {currentQuestion > 0 && (
                   <button
                     onClick={() => setCurrentQuestion(currentQuestion - 1)}
-                    className="py-1 px-2 rounded bg-blue-950 text-white"
+                    className="py-1 px-2 rounded bg-green-700 text-white"
                   >
                     Previous
                   </button>
@@ -149,7 +156,7 @@ const Quiz = () => {
                 {currentQuestion < questions.length - 1 && (
                   <button
                     onClick={() => setCurrentQuestion(currentQuestion + 1)}
-                    className="py-1 px-2 rounded bg-blue-950 text-white"
+                    className="py-1 px-2 rounded bg-green-700 text-white"
                   >
                     Next
                   </button>
